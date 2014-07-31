@@ -179,7 +179,7 @@ class OSTools:
                     LEFT JOIN networks ON ports.network_id = networks.id \
                     WHERE ports.device_id='%s'" % (uuid)
 
-        results = self._query(querystr, 'netinfo_by_uuid', 'quantum', False)
+        results = self._query(querystr, 'network_by_uuid', 'quantum', False)
         return results
 
     def secgroups_by_port_id(self,port_id):
