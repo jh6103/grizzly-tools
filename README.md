@@ -26,7 +26,7 @@ Use only ONE search parameter [floating_ip|instance|uuid]
 ```
 $ ./vm_info -u d9000d06-d6cc-4783-8ba7-839b62b9ab8e -v -s
 
-Virtual Machine
+[ Virtual Machine ]
 Hostname: docker01
  Created: 2014-07-28 21:21:08
  Creator: 3dedc6ed0d4540e9b84d7f93c53a607c [jh6103]
@@ -39,7 +39,7 @@ Instance: instance-00002cf8
  Compute: cnode01
    State: active
 
-Networking
+[ Networking ]
  VM Port: 1aa87b72-2d57-45f4-a7f6-d4bd47b203a9
   Router: c72a6b43-b946-44b7-8cd6-a5eb5cc3c2bc [docker_router]
  Network: d967ec9b-5f9e-43e4-9bb8-53ad8e252ea0 [docker_network]
@@ -49,7 +49,7 @@ Networking
  Private: 192.168.0.5 [exp:2014-07-31 22:03:44]
 Floating: XXX.XXX.XXX.XXX
 
-Volumes
+[ Volumes ]
 496b0760-cf01-408c-9d8a-f0322d086310 [docker_volume]
 :: My Docker Volume
  Created: 2014-07-30 23:19:26
@@ -58,7 +58,7 @@ Volumes
 Provider: n123456n3210a4002:/vol/v00_n123456n3210a4002_cinder_ZONE1
   Status: in-use [attached]
 
-Security Groups
+[ Security Groups ]
 28b3f563-076f-44e4-bba5-5493abaa890a [docker_secgroup]
 :: Docker Security Group
     PROT   MIN     MAX     CIDR                 ID
