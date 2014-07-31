@@ -46,7 +46,6 @@ def main():
         else:
             hexval = args.instance
         instid = int(hexval, 16)  # convert hex to dec
-
         vminfo = openstack.vm_info('instance_id', instid)
     if args.uuid:
         vminfo = openstack.vm_info('uuid', args.uuid)
