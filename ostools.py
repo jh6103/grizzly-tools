@@ -199,6 +199,30 @@ class OSTools:
         return results
 
 
+    def secgroups_by_port_id(self,port_id):
+        """ """
+        querystr = "SELECT securitygroupportbindings.security_group_id, \
+                    securitygroups.name, \
+                    securitygroups.description \
+                    FROM securitygroupportbindings \
+                    JOIN securitygroups ON securitygroupportbindings.security_group_id = securitygroups.id \
+                    WHERE securitygroupportbindings.port_id='%s'" % (port_id)
+
+        results = self._query(querystr, 'secgroups_by_port_id', 'quantum', True)
+        return results
+
+
+    def secgroup_rules(self,security_group_id):
+        """ """
+        querystr = "SELECT id,protocol,port_range_min,port_range_max,remote_ip_prefix \
+                    FROM securitygrouprules \
+                    WHERE direction='ingress' \
+                    AND ethertype='IPv4' \
+                    AND security_group_id='%s'" % (security_group_id)
+        results = self._query(querystr, 'secgroup_rules', 'quantum', True)
+        return results
+
+
     def uuid_by_floating_ip(self,ip):
         """ """
         querystr = "SELECT ports.device_id as uuid\

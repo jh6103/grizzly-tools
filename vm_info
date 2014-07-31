@@ -14,6 +14,8 @@ def get_args():
     parser.add_argument("-f", "--floating_ip")
     parser.add_argument("-i", "--instance", help = "(XXXXXXXX, i-XXXXXXX, instance-XXXXXXXX)")
     parser.add_argument("-u", "--uuid")
+    parser.add_argument("-v", "--volumes", help = "Include volume information", action="store_true")
+    parser.add_argument("-s", "--secgroups", help = "Include security group information", action="store_true")
 
     args = parser.parse_args()
 
@@ -49,7 +51,6 @@ def main():
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
     netinfo = openstack.network_by_uuid(vminfo['uuid'])
-    volinfo = openstack.volume_by_uuid(vminfo['uuid'])
 
     # Output
     print
@@ -74,7 +75,9 @@ def main():
     print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
     print("Floating: %s" % netinfo['floating_ip_address'])
     print
-    if volinfo:
+
+    if args.volumes:
+        volinfo = openstack.volume_by_uuid(vminfo['uuid'])
         print("%sVolumes%s" % (red,nrm))
         for row in volinfo:
             userinfo = openstack.user_by_id(row['user_id'])
@@ -86,6 +89,16 @@ def main():
             print("    Desc: %s" % row['display_description'])
             print("Provider: %s" % row['provider_location'])
             print("  Status: %s [%s]" % (row['status'],row['attach_status']))
+            print
+
+    if args.secgroups:
+        print("%sSecurity Groups%s" % (red,nrm))
+        secgroups = openstack.secgroups_by_port_id(netinfo['id'])
+        for group in secgroups:
+            print("%s [%s] - %s" % (group['security_group_id'],group['name'],group['description']))
+            sg_rules = openstack.secgroup_rules(group['security_group_id'])
+            for rule in sg_rules:
+                print("    %-6s %-7s %-7s %-20s %s" % (rule['protocol'],rule['port_range_min'],rule['port_range_max'],rule['remote_ip_prefix'],rule['id']))
             print
 
 
