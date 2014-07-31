@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+
+from ostools import *
+import os
+import sys
+import argparse
+
+openstack = OSTools('ostools.cfg')
+
+def get_args():
+    "Get command-line options"
+    parser = argparse.ArgumentParser(prog = "cnode_info",
+                                     description = "Show usage stats for compute nodes",
+                                     epilog = "The sort is by number of VM's")
+    parser.add_argument("-r", "--reverse", help = "Reverse the sort order", action="store_true")
+    parser.add_argument("-q", "--quiet", help = "Suppress header line", action="store_true")
+
+    args = parser.parse_args()
+
+    return args
+
+
+def main():
+    args = get_args()
+
+    if args.reverse:
+        cnodes = openstack.cnode_info("DESC")
+    else:
+        cnodes = openstack.cnode_info()
+
+    if not args.quiet:
+        print("%s%s%-4s %-7s %-14s %-10s %s%s" % 
+             (bld,uln,"VMs","VCPU","RAM","STATUS","CNODE",nrm))
+
+    for cnode in cnodes:
+        cpu = "%s/%s" % (cnode['vcpus_used'],cnode['vcpus'])
+        ram = "%s/%s" % (cnode['memory_mb_used'],cnode['memory_mb'])
+        if cnode['disabled']:
+           state = "disabled"
+        else:
+           state = "enabled"
+        print("%-4s %-7s %-14s %-10s %s" % (cnode['running_vms'],cpu,ram,state,cnode['host']))
+
+if __name__ == '__main__':
+    main()
