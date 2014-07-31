@@ -6,16 +6,21 @@ import sys
 
 openstack = OSTools('ostools.cfg')
 
+
 def get_args():
-    "Get command-line options"
+    """Get command-line options"""
     parser = argparse.ArgumentParser(prog = "vm_info",
-                                     description = "Lookup VM Information",
-                                     epilog = "Use only ONE search parameter [floating_ip|instance|uuid]")
+                description = "Lookup VM Information",
+                epilog = "Use only ONE search parameter [floating_ip|instance|uuid]")
     parser.add_argument("-f", "--floating_ip")
     parser.add_argument("-i", "--instance")
     parser.add_argument("-u", "--uuid")
-    parser.add_argument("-v", "--volumes", help = "Include volume information", action="store_true")
-    parser.add_argument("-s", "--secgroups", help = "Include security group information", action="store_true")
+    parser.add_argument("-v", "--volumes",
+                        help = "Include volume information",
+                        action="store_true")
+    parser.add_argument("-s", "--secgroups",
+                        help = "Include security group information",
+                        action="store_true")
 
     args = parser.parse_args()
 
@@ -34,17 +39,17 @@ def main():
     # Get VM Information
     if args.floating_ip:
         uuid = openstack.uuid_by_floating_ip(args.floating_ip)
-        vminfo = openstack.vm_info('uuid',uuid['uuid'])
+        vminfo = openstack.vm_info('uuid', uuid['uuid'])
     if args.instance:
         if "instance-" in args.instance or "i-" in args.instance:
-            hexval = args.instance[args.instance.index('-')+1:] # Strip off "instance-" or "i-"
+            hexval = args.instance[args.instance.index('-') + 1:]  # Strip off "instance-" or "i-"
         else:
             hexval = args.instance
-        instid = int(hexval,16) # convert hex to dec
+        instid = int(hexval, 16)  # convert hex to dec
 
-        vminfo = openstack.vm_info('instance_id',instid)
+        vminfo = openstack.vm_info('instance_id', instid)
     if args.uuid:
-        vminfo = openstack.vm_info('uuid',args.uuid)
+        vminfo = openstack.vm_info('uuid', args.uuid)
 
     # Get ancillary information
     userinfo = openstack.user_by_id(vminfo['user_id'])
@@ -54,7 +59,7 @@ def main():
 
     # Output
     print
-    print("%sVirtual Machine%s" % (red,nrm))
+    print("%sVirtual Machine%s" % (red, nrm))
     print("Hostname: %s" % vminfo['hostname'])
     print(" Created: %s" % vminfo['created_at'])
     print(" Creator: %s [%s]" % (vminfo['user_id'], userinfo['name']))
@@ -65,7 +70,7 @@ def main():
     print(" Compute: %s" % vminfo['host'])
     print("   State: %s" % vminfo['vm_state'])
     print
-    print("%sNetworking%s" % (red,nrm))
+    print("%sNetworking%s" % (red, nrm))
     print(" VM Port: %s" % netinfo['id'])
     print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
     print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
@@ -78,7 +83,7 @@ def main():
 
     if args.volumes:
         volinfo = openstack.volume_by_uuid(vminfo['uuid'])
-        print("%sVolumes%s" % (red,nrm))
+        print("%sVolumes%s" % (red, nrm))
         for row in volinfo:
             userinfo = openstack.user_by_id(row['user_id'])
             print("    Name: %s" % row['display_name'])
@@ -88,21 +93,25 @@ def main():
             print("    Size: %s GB" % row['size'])
             print("    Desc: %s" % row['display_description'])
             print("Provider: %s" % row['provider_location'])
-            print("  Status: %s [%s]" % (row['status'],row['attach_status']))
+            print("  Status: %s [%s]" % (row['status'], row['attach_status']))
             print
 
     if args.secgroups:
-        print("%sSecurity Groups%s" % (red,nrm))
         secgroups = openstack.secgroups_by_port_id(netinfo['id'])
+        print("%sSecurity Groups%s" % (red, nrm))
         for group in secgroups:
-            print("%s [%s] - %s" % (group['security_group_id'],group['name'],group['description']))
+            print("%s [%s] - %s" % (group['security_group_id'],
+                                    group['name'],
+                                    group['description']))
             sg_rules = openstack.secgroup_rules(group['security_group_id'])
             for rule in sg_rules:
-                print("    %-6s %-7s %-7s %-20s %s" % (rule['protocol'],rule['port_range_min'],rule['port_range_max'],rule['remote_ip_prefix'],rule['id']))
+                print("    %-6s %-7s %-7s %-20s %s" % (rule['protocol'],
+                                                       rule['port_range_min'],
+                                                       rule['port_range_max'],
+                                                       rule['remote_ip_prefix'],
+                                                       rule['id']))
             print
 
 
 if __name__ == '__main__':
     main()
-
-

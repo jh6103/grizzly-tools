@@ -3,6 +3,7 @@
 import ConfigParser
 import MySQLdb
 
+
 def get_nova_creds(db):
     config = ConfigParser.ConfigParser()
     config.read('ostools.cfg')
@@ -12,11 +13,12 @@ def get_nova_creds(db):
     password = config.get(db, 'pass')
     host = config.get(db, 'host')
 
-    return (host,user,password,name)
+    return (host, user, password, name)
+
 
 def get_mysql_ver(db):
     # Setup variables
-    dbhost,dbuser,dbpass,dbname = get_nova_creds(db)
+    dbhost, dbuser, dbpass, dbname = get_nova_creds(db)
 
     # Open the DB connection
     db = MySQLdb.connect(dbhost, dbuser, dbpass, dbname)
@@ -40,9 +42,8 @@ cndr = get_mysql_ver('cinder')
 glnc = get_mysql_ver('glance')
 qntm = get_mysql_ver('quantum')
 
-print("    Nova MySQL Version: %s" % nova )
-print("Keystone MySQL Version: %s" % kstn )
-print("  Cinder MySQL Version: %s" % cndr )
-print("  Glance MySQL Version: %s" % glnc )
-print(" Quantum MySQL Version: %s" % qntm )
-
+print("    Nova MySQL Version: %s" % nova)
+print("Keystone MySQL Version: %s" % kstn)
+print("  Cinder MySQL Version: %s" % cndr)
+print("  Glance MySQL Version: %s" % glnc)
+print(" Quantum MySQL Version: %s" % qntm)

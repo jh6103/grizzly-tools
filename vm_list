@@ -6,16 +6,25 @@ import sys
 
 openstack = OSTools('ostools.cfg')
 
+
 def get_args():
-    "Get command-line options"
-    parser = argparse.ArgumentParser(prog = "vm_list",
-                                     description = "Returns a list of VM's & info.",
-                                     epilog = "You must provide at least one of 'all', 'name', 'cnode' or 'project_id'.")
-    parser.add_argument("-q", "--quiet", help = "Suppress the header line", action = "store_true")
-    parser.add_argument("-a", "--all", help = "List all VM's", action = "store_true")
-    parser.add_argument("-n", "--name", help = "The VM hostname OR partial match (4 character minimum)")
-    parser.add_argument("-c", "--cnode", help = "The shortname of the compute node")
-    parser.add_argument("-p", "--project_id", help = "The project (tenant) ID")
+    """Get command-line options"""
+    parser = argparse.ArgumentParser(
+                prog = "vm_list",
+                description = "Returns a list of VM's & info.",
+                epilog = "You must provide at least one of 'all', 'name', 'cnode' or 'project_id'.")
+    parser.add_argument("-q", "--quiet",
+                        help = "Suppress the header line",
+                        action = "store_true")
+    parser.add_argument("-a", "--all",
+                        help = "List all VM's",
+                        action = "store_true")
+    parser.add_argument("-n", "--name",
+                        help = "The VM hostname OR partial match (4 character minimum)")
+    parser.add_argument("-c", "--cnode",
+                        help = "The shortname of the compute node")
+    parser.add_argument("-p", "--project_id",
+                        help = "The project (tenant) ID")
 
     args = parser.parse_args()
 
@@ -40,16 +49,16 @@ def main():
     if args.all:
         vmlist = openstack.vm_list('all')
     if args.name:
-        vmlist = openstack.vm_list('hostname',args.name)
+        vmlist = openstack.vm_list('hostname', args.name)
     if args.cnode:
-        vmlist = openstack.vm_list('host',args.cnode)
+        vmlist = openstack.vm_list('host', args.cnode)
     if args.project_id:
-        vmlist = openstack.vm_list('project_id',args.project_id)
+        vmlist = openstack.vm_list('project_id', args.project_id)
 
     # Output
     if not args.quiet:
-       print("%s%-6s %-10s  %-32s  %-36s  %-9s  %s%s" %
-             (bld,"CNODE","INSTANCE","PROJECT_ID","UUID","STATE","HOSTNAME",nrm))
+        print("%s%-6s %-10s  %-32s  %-36s  %-9s  %s%s" %
+             (bld, "CNODE", "INSTANCE", "PROJECT_ID", "UUID", "STATE", "HOSTNAME", nrm))
     for row in vmlist:
         print("%-6s i-%08x  %-32s  %-36s  %-9s  %s" %
               (row['host'],
@@ -62,5 +71,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
