@@ -218,7 +218,8 @@ class OSTools:
                     FROM securitygrouprules \
                     WHERE direction='ingress' \
                     AND ethertype='IPv4' \
-                    AND security_group_id='%s'" % (security_group_id)
+                    AND security_group_id='%s' \
+                    ORDER BY port_range_min" % (security_group_id)
         results = self._query(querystr, 'secgroup_rules', 'quantum', True)
         return results
 
