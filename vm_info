@@ -95,10 +95,9 @@ def main():
         else:
             for row in volinfo:
                 userinfo = openstack.user_by_id(row['user_id'])
-                print("    Name: %s" % row['display_name'])
+                print("%s [%s]" % (row['id'], row['display_name']))
                 print(" Created: %s" % row['created_at'])
                 print(" Creator: %s [%s]" % (row['user_id'], userinfo['name']))
-                print("      ID: %s" % row['id'])
                 print("    Size: %s GB" % row['size'])
                 print("    Desc: %s" % row['display_description'])
                 print("Provider: %s" % row['provider_location'])
