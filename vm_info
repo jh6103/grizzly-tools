@@ -105,10 +105,11 @@ def main():
         secgroups = openstack.secgroups_by_port_id(netinfo['id'])
         print("%sSecurity Groups%s" % (red, nrm))
         for group in secgroups:
-            print("%s [%s] - %s" % (group['security_group_id'],
-                                    group['name'],
-                                    group['description']))
+            print("%s [%s]" % (group['security_group_id'], group['name']))
+            print(group['description'])
             sg_rules = openstack.secgroup_rules(group['security_group_id'])
+            print("%s    %-6s %-7s %-7s %-20s %s%s" %
+                (bld, "PROT", "MIN", "MAX", "CIDR", "ID", nrm))
             for rule in sg_rules:
                 print("    %-6s %-7s %-7s %-20s %s" % (rule['protocol'],
                                                        rule['port_range_min'],
