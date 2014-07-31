@@ -92,7 +92,7 @@ class OSTools:
             querystr = "SELECT id,host,project_id,uuid,vm_state,hostname \
                         FROM instances \
                         WHERE deleted=0 ORDER BY host"
-        if key == "host":
+        elif key == "host":
             querystr = "SELECT id,host,project_id,uuid,vm_state,hostname \
                         FROM instances \
                         WHERE host='%s' AND deleted=0" % (val)
