@@ -124,7 +124,8 @@ class OSTools:
 
     def flavor_by_id(self,typeid):
         """ """
-        querystr = "SELECT * FROM instance_types WHERE deleted=0 AND id='%s'" % (typeid)
+        # Removed 'where deleted=0' from query as some flavors decom'd
+        querystr = "SELECT * FROM instance_types WHERE id='%s'" % (typeid)
         results = self._query(querystr, 'flavor_by_id', 'nova', False)
         return results
 
