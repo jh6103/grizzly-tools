@@ -9,10 +9,10 @@ openstack = OSTools('ostools.cfg')
 def get_args():
     "Get command-line options"
     parser = argparse.ArgumentParser(prog = "vm_info",
-                                     description = "Lookup VM Information based on provided parameter.",
-                                     epilog = "Only ONE search parameter is required.")
+                                     description = "Lookup VM Information",
+                                     epilog = "Use only ONE search parameter [floating_ip|instance|uuid]")
     parser.add_argument("-f", "--floating_ip")
-    parser.add_argument("-i", "--instance", help = "(XXXXXXXX, i-XXXXXXX, instance-XXXXXXXX)")
+    parser.add_argument("-i", "--instance")
     parser.add_argument("-u", "--uuid")
     parser.add_argument("-v", "--volumes", help = "Include volume information", action="store_true")
     parser.add_argument("-s", "--secgroups", help = "Include security group information", action="store_true")
