@@ -60,7 +60,7 @@ def main():
 
     # Output
     print
-    print("%sVirtual Machine%s" % (red, nrm))
+    print("%s[ Virtual Machine ]%s" % (red, nrm))
     print("Hostname: %s" % vminfo['hostname'])
     print(" Created: %s" % vminfo['created_at'])
     print(" Creator: %s [%s]" % (vminfo['user_id'], userinfo['name']))
@@ -78,7 +78,7 @@ def main():
     print(" Compute: %s" % vminfo['host'])
     print("   State: %s" % vminfo['vm_state'])
     print
-    print("%sNetworking%s" % (red, nrm))
+    print("%s[ Networking ]%s" % (red, nrm))
     print(" VM Port: %s" % netinfo['id'])
     print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
     print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
@@ -91,7 +91,7 @@ def main():
 
     if args.volumes:
         volinfo = openstack.volume_by_uuid(vminfo['uuid'])
-        print("%sVolumes%s" % (red, nrm))
+        print("%s[ Volumes ]%s" % (red, nrm))
         if not volinfo:
             print("No Volumes")
             print
@@ -109,7 +109,7 @@ def main():
 
     if args.secgroups:
         secgroups = openstack.secgroups_by_port_id(netinfo['id'])
-        print("%sSecurity Groups%s" % (red, nrm))
+        print("%s[ Security Groups ]%s" % (red, nrm))
         if not secgroups:
             print("No Security Groups")
             print
