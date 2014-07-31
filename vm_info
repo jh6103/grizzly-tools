@@ -56,6 +56,7 @@ def main():
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
     netinfo = openstack.network_by_uuid(vminfo['uuid'])
+    imagename = openstack.image_name(vminfo['image_ref'])
 
     # Output
     print
@@ -69,6 +70,8 @@ def main():
                 flavorinfo['memory_mb'],
                 flavorinfo['root_gb'],
                 flavorinfo['ephemeral_gb']))
+    print("   Image: %s [%s]" % (vminfo['image_ref'], imagename['name']))
+    print(" SSH Key: %s" % vminfo['key_name'])
     print("    UUID: %s" % vminfo['uuid'])
     print("Instance: instance-%08x" % vminfo['id'])
     print(" Project: %s [%s]" % (vminfo['project_id'], projectinfo['name']))
@@ -96,10 +99,10 @@ def main():
             for row in volinfo:
                 userinfo = openstack.user_by_id(row['user_id'])
                 print("%s [%s]" % (row['id'], row['display_name']))
+                print(":: %s" % row['display_description'])
                 print(" Created: %s" % row['created_at'])
                 print(" Creator: %s [%s]" % (row['user_id'], userinfo['name']))
                 print("    Size: %s GB" % row['size'])
-                print("    Desc: %s" % row['display_description'])
                 print("Provider: %s" % row['provider_location'])
                 print("  Status: %s [%s]" % (row['status'], row['attach_status']))
                 print
@@ -113,7 +116,7 @@ def main():
         else:
             for group in secgroups:
                 print("%s [%s]" % (group['security_group_id'], group['name']))
-                print(group['description'])
+                print(":: %s" % group['description'])
                 sg_rules = openstack.secgroup_rules(group['security_group_id'])
                 print("%s    %-6s %-7s %-7s %-20s %s%s" %
                     (bld, "PROT", "MIN", "MAX", "CIDR", "ID", nrm))
