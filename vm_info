@@ -63,7 +63,12 @@ def main():
     print("Hostname: %s" % vminfo['hostname'])
     print(" Created: %s" % vminfo['created_at'])
     print(" Creator: %s [%s]" % (vminfo['user_id'], userinfo['name']))
-    print("  Flavor: %s" % flavorinfo['name'])
+    print("  Flavor: %s [cpu:%-2s  ram:%-5s  root:%-3sGB  eph:%-3sGB]" %
+                (flavorinfo['name'],
+                flavorinfo['vcpus'],
+                flavorinfo['memory_mb'],
+                flavorinfo['root_gb'],
+                flavorinfo['ephemeral_gb']))
     print("    UUID: %s" % vminfo['uuid'])
     print("Instance: instance-%08x" % vminfo['id'])
     print(" Project: %s [%s]" % (vminfo['project_id'], projectinfo['name']))
