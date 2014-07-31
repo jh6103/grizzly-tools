@@ -89,17 +89,21 @@ def main():
     if args.volumes:
         volinfo = openstack.volume_by_uuid(vminfo['uuid'])
         print("%sVolumes%s" % (red, nrm))
-        for row in volinfo:
-            userinfo = openstack.user_by_id(row['user_id'])
-            print("    Name: %s" % row['display_name'])
-            print(" Created: %s" % row['created_at'])
-            print(" Creator: %s [%s]" % (row['user_id'], userinfo['name']))
-            print("      ID: %s" % row['id'])
-            print("    Size: %s GB" % row['size'])
-            print("    Desc: %s" % row['display_description'])
-            print("Provider: %s" % row['provider_location'])
-            print("  Status: %s [%s]" % (row['status'], row['attach_status']))
+        if not volinfo:
+            print("No Volumes")
             print
+        else:
+            for row in volinfo:
+                userinfo = openstack.user_by_id(row['user_id'])
+                print("    Name: %s" % row['display_name'])
+                print(" Created: %s" % row['created_at'])
+                print(" Creator: %s [%s]" % (row['user_id'], userinfo['name']))
+                print("      ID: %s" % row['id'])
+                print("    Size: %s GB" % row['size'])
+                print("    Desc: %s" % row['display_description'])
+                print("Provider: %s" % row['provider_location'])
+                print("  Status: %s [%s]" % (row['status'], row['attach_status']))
+                print
 
     if args.secgroups:
         secgroups = openstack.secgroups_by_port_id(netinfo['id'])
