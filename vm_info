@@ -56,6 +56,7 @@ def main():
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
     netinfo = openstack.network_by_uuid(vminfo['uuid'])
+    imagename = openstack.image_name(vminfo['image_ref'])
 
     # Output
     print
@@ -69,6 +70,8 @@ def main():
                 flavorinfo['memory_mb'],
                 flavorinfo['root_gb'],
                 flavorinfo['ephemeral_gb']))
+    print("   Image: %s [%s]" % (vminfo['image_ref'], imagename['name']))
+    print(" SSH Key: %s" % vminfo['key_name'])
     print("    UUID: %s" % vminfo['uuid'])
     print("Instance: instance-%08x" % vminfo['id'])
     print(" Project: %s [%s]" % (vminfo['project_id'], projectinfo['name']))

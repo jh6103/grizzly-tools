@@ -111,11 +111,11 @@ class OSTools:
     def vm_info(self, key, val):
         """ """
         if key == "instance_id":
-            querystr = "SELECT created_at,id,user_id,project_id,vm_state,hostname,host,instance_type_id,uuid \
+            querystr = "SELECT created_at,id,user_id,project_id,image_ref,key_name,vm_state,hostname,host,instance_type_id,uuid \
                         FROM instances \
                         WHERE id='%s' AND deleted=0" % (val)
         if key == "uuid":
-            querystr = "SELECT created_at,id,user_id,project_id,vm_state,hostname,host,instance_type_id,uuid \
+            querystr = "SELECT created_at,id,user_id,project_id,image_ref,key_name,vm_state,hostname,host,instance_type_id,uuid \
                         FROM instances \
                         WHERE uuid='%s' AND deleted=0" % (val)
 
@@ -224,4 +224,14 @@ class OSTools:
         querystr = "SELECT * FROM volumes WHERE deleted=0 AND instance_uuid='%s' ORDER BY display_name" % (uuid)
 
         results = self._query(querystr, 'volume_by_uuid', 'cinder', True)
+        return results
+
+##############################################################################
+# GLANCE QUERIES
+##############################################################################
+    def image_name(self,image_id):
+        """ """
+        querystr = "SELECT name FROM images WHERE id='%s'" % (image_id)
+
+        results = self._query(querystr, 'image_name', 'glance', False)
         return results
