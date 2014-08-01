@@ -12,6 +12,9 @@ def get_args():
     parser = argparse.ArgumentParser(prog = "vm_info",
                 description = "Lookup VM Information",
                 epilog = "Use only ONE search parameter [floating_ip|instance|uuid]")
+    parser.add_argument("-n", "--network",
+                        help = "Include network information",
+                        action="store_true")
     parser.add_argument("-v", "--volumes",
                         help = "Include volume information",
                         action="store_true")
@@ -54,9 +57,7 @@ def main():
     userinfo = openstack.user_by_id(vminfo['user_id'])
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
-    netinfo = openstack.network_by_uuid(vminfo['uuid'])
     imagename = openstack.image_name(vminfo['image_ref'])
-    l3gw = openstack.l3_gateway(netinfo['router_id'])
 
     # Output
     print
@@ -78,17 +79,21 @@ def main():
     print(" Compute: %s" % vminfo['host'])
     print("   State: %s" % vminfo['vm_state'])
     print
-    print("%s[ Networking ]%s" % (red, nrm))
-    print(" VM Port: %s" % netinfo['id'])
-    print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
-    print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
-    print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
-    print("   L3 GW: %s" % l3gw['host'])
-    print("    CIDR: %s" % netinfo['cidr'])
-    print("     MAC: %s" % netinfo['mac_address'])
-    print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
-    print("Floating: %s" % netinfo['floating_ip_address'])
-    print
+
+    if args.network:
+        netinfo = openstack.network_by_uuid(vminfo['uuid'])
+        l3gw = openstack.l3_gateway(netinfo['router_id'])
+        print("%s[ Networking ]%s" % (red, nrm))
+        print(" VM Port: %s" % netinfo['id'])
+        print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
+        print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
+        print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
+        print("   L3 GW: %s" % l3gw['host'])
+        print("    CIDR: %s" % netinfo['cidr'])
+        print("     MAC: %s" % netinfo['mac_address'])
+        print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
+        print("Floating: %s" % netinfo['floating_ip_address'])
+        print
 
     if args.volumes:
         volinfo = openstack.volume_by_uuid(vminfo['uuid'])
