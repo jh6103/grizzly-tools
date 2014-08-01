@@ -54,6 +54,7 @@ def main():
         vminfo = openstack.vm_info('uuid', args.uuid)
 
     # Get ancillary information
+    vmports = openstack.vm_ports(vminfo['uuid'])
     userinfo = openstack.user_by_id(vminfo['user_id'])
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
@@ -82,7 +83,6 @@ def main():
 
     # Network Section
     if args.network:
-        vmports = openstack.vm_ports(vminfo['uuid'])
         print("%s[ Networking ]%s" % (red, nrm))
         if not vmports:
             print("No Network")
@@ -124,7 +124,8 @@ def main():
 
     # Security Groups Section
     if args.secgroups:
-        secgroups = openstack.secgroups_by_port_id(netinfo['id'])
+        # Just use the first element of vmports since all are the same
+        secgroups = openstack.secgroups_by_port_id(vmports[0]['id'])
         print("%s[ Security Groups ]%s" % (red, nrm))
         if not secgroups:
             print("No Security Groups")
