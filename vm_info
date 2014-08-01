@@ -91,16 +91,16 @@ def main():
             for port in vmports:
                 netinfo = openstack.network_by_port_id(port['id'])
                 print(" VM Port: %s [%s]" % (port['id'], netinfo['pt_name']))
-                print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
                 print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
                 print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
                 if netinfo['router_id']:
                     l3gw = openstack.l3_gateway(netinfo['router_id'])
+                    print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
                     print("   L3 GW: %s" % l3gw['host'])
+                    print("Floating: %s" % netinfo['floating_ip_address'])
+                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
                 print("    CIDR: %s" % netinfo['cidr'])
                 print("     MAC: %s" % netinfo['mac_address'])
-                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
-                print("Floating: %s" % netinfo['floating_ip_address'])
                 print
 
     # Volumes Section
