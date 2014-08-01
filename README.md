@@ -42,14 +42,14 @@ Instance: instance-00002cf8
 
 [ Networking ]
  VM Port: 1aa87b72-2d57-47f4-a7f6-d4bd47b203a9
-  Router: c72a6b43-b946-4477-8cd6-a5eb5cc3c2bc [docker_router]
  Network: d967ec9b-5f9e-43e4-97b8-53ad8e252ea0 [docker_network]
   Subnet: 78231522-11b6-4a06-b37f-c45061f6d723 [docker_subnet]
+  Router: c72a6b43-b946-4477-8cd6-a5eb5cc3c2bc [docker_router]
    L3 GW: l3gw01.int.mydomain.com
+Floating: XXX.XXX.XXX.XXX
+ Private: 192.168.0.5 [exp:2014-07-31 22:03:44]
     CIDR: 192.168.0.0/24
      MAC: fa:16:3e:d6:bf:23
- Private: 192.168.0.5 [exp:2014-07-31 22:03:44]
-Floating: XXX.XXX.XXX.XXX
 
 [ Volumes ]
 496b0760-cf01-408c-9d8a-f0322d786310 [docker_volume]
