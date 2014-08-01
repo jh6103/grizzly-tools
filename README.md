@@ -7,24 +7,25 @@ Admin scripts for Grizzly that direct-access the DB instead of API
 
 ```
 $ ./vm_info --help
-usage: vm_info [-h] [-f FLOATING_IP] [-i INSTANCE] [-u UUID] [-v] [-s]
+usage: vm_info [-h] [-n] [-v] [-s] [-f FLOATING_IP] [-i INSTANCE] [-u UUID]
 
 Lookup VM Information
 
 optional arguments:
   -h, --help            show this help message and exit
+  -n, --network         Include network information
+  -v, --volumes         Include volume information
+  -s, --secgroups       Include security group information
   -f FLOATING_IP, --floating_ip FLOATING_IP
   -i INSTANCE, --instance INSTANCE
   -u UUID, --uuid UUID
-  -v, --volumes         Include volume information
-  -s, --secgroups       Include security group information
 
 Use only ONE search parameter [floating_ip|instance|uuid]
 ```
 ### Sample Output for vm_info
 
 ```
-$ ./vm_info -u d9000d06-d6cc-4773-8ba7-839b62b9ab8e -v -s
+$ ./vm_info -nvsu d9000d06-d6cc-4773-8ba7-839b62b9ab8e
 
 [ Virtual Machine ]
 Hostname: docker01
