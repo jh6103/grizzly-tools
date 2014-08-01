@@ -159,9 +159,16 @@ class OSTools:
 ##############################################################################
 # QUANTUM QUERIES
 ##############################################################################
-    def network_by_uuid(self,uuid):
+    def vm_ports(self,uuid):
         """ """
-        querystr = "SELECT ports.id, \
+        querystr = "SELECT id FROM ports WHERE device_id='%s'" % (uuid)
+
+        results = self._query(querystr, 'vm_ports', 'quantum', True)
+        return results
+
+    def network_by_port_id(self,portid):
+        """ """
+        querystr = "SELECT ports.name as pt_name, \
                     ports.network_id, \
                     ports.mac_address, \
                     ipallocations.ip_address, \
@@ -171,6 +178,7 @@ class OSTools:
                     floatingips.floating_ip_address, \
                     floatingips.router_id, \
                     subnets.name as sn_name, \
+                    routers.id as router_id, \
                     routers.name as rt_name, \
                     networks.name as nt_name \
                     FROM ports \
@@ -179,9 +187,9 @@ class OSTools:
                     LEFT JOIN subnets ON ipallocations.subnet_id = subnets.id \
                     LEFT JOIN routers ON floatingips.router_id = routers.id \
                     LEFT JOIN networks ON ports.network_id = networks.id \
-                    WHERE ports.device_id='%s'" % (uuid)
+                    WHERE ports.id='%s'" % (portid)
 
-        results = self._query(querystr, 'network_by_uuid', 'quantum', False)
+        results = self._query(querystr, 'network_by_port_id', 'quantum', False)
         return results
 
     def secgroups_by_port_id(self,port_id):

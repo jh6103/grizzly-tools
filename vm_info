@@ -54,13 +54,12 @@ def main():
         vminfo = openstack.vm_info('uuid', args.uuid)
 
     # Get ancillary information
-    netinfo = openstack.network_by_uuid(vminfo['uuid'])
     userinfo = openstack.user_by_id(vminfo['user_id'])
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
     imagename = openstack.image_name(vminfo['image_ref'])
 
-    # Output
+    # Virtual Machine Section
     print
     print("%s[ Virtual Machine ]%s" % (red, nrm))
     print("Hostname: %s" % vminfo['hostname'])
@@ -81,20 +80,30 @@ def main():
     print("   State: %s" % vminfo['vm_state'])
     print
 
+    # Network Section
     if args.network:
-        l3gw = openstack.l3_gateway(netinfo['router_id'])
+        vmports = openstack.vm_ports(vminfo['uuid'])
         print("%s[ Networking ]%s" % (red, nrm))
-        print(" VM Port: %s" % netinfo['id'])
-        print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
-        print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
-        print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
-        print("   L3 GW: %s" % l3gw['host'])
-        print("    CIDR: %s" % netinfo['cidr'])
-        print("     MAC: %s" % netinfo['mac_address'])
-        print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
-        print("Floating: %s" % netinfo['floating_ip_address'])
-        print
+        if not vmports:
+            print("No Network")
+            print
+        else:
+            for port in vmports:
+                netinfo = openstack.network_by_port_id(port['id'])
+                print(" VM Port: %s [%s]" % (port['id'], netinfo['pt_name']))
+                print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
+                print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
+                print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
+                if netinfo['router_id']:
+                    l3gw = openstack.l3_gateway(netinfo['router_id'])
+                    print("   L3 GW: %s" % l3gw['host'])
+                print("    CIDR: %s" % netinfo['cidr'])
+                print("     MAC: %s" % netinfo['mac_address'])
+                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
+                print("Floating: %s" % netinfo['floating_ip_address'])
+                print
 
+    # Volumes Section
     if args.volumes:
         volinfo = openstack.volume_by_uuid(vminfo['uuid'])
         print("%s[ Volumes ]%s" % (red, nrm))
@@ -113,6 +122,7 @@ def main():
                 print("  Status: %s [%s]" % (row['status'], row['attach_status']))
                 print
 
+    # Security Groups Section
     if args.secgroups:
         secgroups = openstack.secgroups_by_port_id(netinfo['id'])
         print("%s[ Security Groups ]%s" % (red, nrm))
