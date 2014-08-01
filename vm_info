@@ -54,6 +54,7 @@ def main():
         vminfo = openstack.vm_info('uuid', args.uuid)
 
     # Get ancillary information
+    netinfo = openstack.network_by_uuid(vminfo['uuid'])
     userinfo = openstack.user_by_id(vminfo['user_id'])
     projectinfo = openstack.project_by_id(vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
@@ -81,7 +82,6 @@ def main():
     print
 
     if args.network:
-        netinfo = openstack.network_by_uuid(vminfo['uuid'])
         l3gw = openstack.l3_gateway(netinfo['router_id'])
         print("%s[ Networking ]%s" % (red, nrm))
         print(" VM Port: %s" % netinfo['id'])
