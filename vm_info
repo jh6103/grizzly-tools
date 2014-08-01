@@ -56,6 +56,7 @@ def main():
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
     netinfo = openstack.network_by_uuid(vminfo['uuid'])
     imagename = openstack.image_name(vminfo['image_ref'])
+    l3gw = openstack.l3_gateway(netinfo['router_id'])
 
     # Output
     print
@@ -82,6 +83,7 @@ def main():
     print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
     print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
     print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
+    print("   L3 GW: %s" % l3gw['host'])
     print("    CIDR: %s" % netinfo['cidr'])
     print("     MAC: %s" % netinfo['mac_address'])
     print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))

@@ -126,6 +126,7 @@ class OSTools:
         """ """
         # Removed 'where deleted=0' from query as some flavors decom'd
         querystr = "SELECT * FROM instance_types WHERE id='%s'" % (typeid)
+
         results = self._query(querystr, 'flavor_by_id', 'nova', False)
         return results
 
@@ -203,6 +204,7 @@ class OSTools:
                     AND ethertype='IPv4' \
                     AND security_group_id='%s' \
                     ORDER BY port_range_min" % (security_group_id)
+
         results = self._query(querystr, 'secgroup_rules', 'quantum', True)
         return results
 
@@ -214,6 +216,16 @@ class OSTools:
                     WHERE floatingips.floating_ip_address='%s'" % (ip)
 
         results = self._query(querystr, 'uuid_by_floating_ip', 'quantum', False)
+        return results
+
+    def l3_gateway(self,router_id):
+        """ """
+        querystr = "SELECT agents.host \
+                    FROM agents \
+                    JOIN routerl3agentbindings ON agents.id = routerl3agentbindings.l3_agent_id \
+                    WHERE routerl3agentbindings.router_id='%s'" % (router_id)
+
+        results = self._query(querystr, 'l3_gateway', 'quantum', False)
         return results
 
 ##############################################################################
