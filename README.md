@@ -25,7 +25,7 @@ Use only ONE search parameter [floating_ip|instance|uuid]
 ### Sample Output for vm_info
 
 ```
-$ ./vm_info -nvsu d9000d06-d6cc-4773-8ba7-839b62b9ab8e
+$ ./vm_info -nvsu d9000d06-d6cc-4783-8b77-839b62b9ab8e
 
 [ Virtual Machine ]
 Hostname: docker01
