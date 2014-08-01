@@ -114,7 +114,7 @@ class OSTools:
             querystr = "SELECT created_at,id,user_id,project_id,image_ref,key_name,vm_state,hostname,host,instance_type_id,uuid \
                         FROM instances \
                         WHERE id='%s' AND deleted=0" % (val)
-        if key == "uuid":
+        elif key == "uuid":
             querystr = "SELECT created_at,id,user_id,project_id,image_ref,key_name,vm_state,hostname,host,instance_type_id,uuid \
                         FROM instances \
                         WHERE uuid='%s' AND deleted=0" % (val)
