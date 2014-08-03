@@ -30,6 +30,7 @@ $ ./vm_info -nvsu d9000d06-d6cc-4783-8b77-839b62b9ab8e
 [ Virtual Machine ]
 Hostname: docker01
  Created: 2014-07-28 21:21:08
+ Updated: 2014-07-29 06:21:08
  Creator: 3dedc6ed0d4540e9b84d7f73c53a607c [jh6103]
   Flavor: m1.tiny [cpu:1   ram:512    root:12 GB  eph:0  GB]
    Image: 4c5d0874-933d-4eef-859e-697d44d51bd1 [Ubuntu-14.04]
