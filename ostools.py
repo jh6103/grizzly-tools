@@ -187,7 +187,7 @@ class OSTools:
                     LEFT JOIN networks ON ports.network_id = networks.id \
                     WHERE ports.id='%s'" % (portid)
 
-        results = self._query(querystr, 'network_by_port_id', 'quantum', False)
+        results = self._query(querystr, 'netinfo_by_port_id', 'quantum', False)
         return results
 
     def dhcp_ports(self,networkid):
@@ -252,7 +252,7 @@ class OSTools:
                     JOIN routerl3agentbindings ON agents.id = routerl3agentbindings.l3_agent_id \
                     WHERE routerl3agentbindings.router_id='%s'" % (router_id)
 
-        results = self._query(querystr, 'l3_gateway', 'quantum', False)
+        results = self._query(querystr, 'l3_gw', 'quantum', False)
         return results
 
 ##############################################################################
