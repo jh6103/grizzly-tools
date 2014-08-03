@@ -44,14 +44,14 @@ Instance: instance-00002cf8
  VM Port: 1aa87b72-2d57-47f4-a7f6-d4bd47b203a9 [fa:16:3e:e7:9f:ce] [eth0]
  Network: d967ec9b-5f9e-43e4-97b8-53ad8e252ea0 [docker_network]
   Subnet: 78231522-11b6-4a06-b37f-c45061f6d723 [docker_subnet]
+    DHCP: 31393d35-09a3-4cd8-84d4-04a7ea5ef630 [fa:16:3e:17:67:48] [ACTIVE]
+    DHCP: 4fec4e6d-3dd3-44ae-ad5c-4957b65c0eaf [fa:16:3e:a7:ee:8f] [ACTIVE]
+  Router: c72a6b43-b946-4477-8cd6-a5eb5cc3c2bc [fa:16:3e:67:fe:0a] [docker_router]
+    L3GW: l3gw01.int.mydomain.com
     CIDR: 192.168.0.0/24
  Gateway: 192.168.0.1  
  Private: 192.168.0.5 [exp:2014-07-31 22:03:44]
 Floating: XXX.XXX.XXX.XXX
-  Router: c72a6b43-b946-4477-8cd6-a5eb5cc3c2bc [fa:16:3e:67:fe:0a] [docker_router]
-    L3GW: l3gw01.int.mydomain.com
-    DHCP: 31393d35-09a3-4cd8-84d4-04a7ea5ef630 [fa:16:3e:17:67:48] [ACTIVE]
-    DHCP: 4fec4e6d-3dd3-44ae-ad5c-4957b65c0eaf [fa:16:3e:a7:ee:8f] [ACTIVE]
 
 [ Volumes ]
 496b0760-cf01-408c-9d8a-f0322d786310 [docker_volume]
