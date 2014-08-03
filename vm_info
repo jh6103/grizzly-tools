@@ -65,6 +65,7 @@ def main():
     print("%s[ Virtual Machine ]%s" % (red, nrm))
     print("Hostname: %s" % vminfo['hostname'])
     print(" Created: %s" % vminfo['created_at'])
+    print(" Updated: %s" % vminfo['updated_at'])
     print(" Creator: %s [%s]" % (vminfo['user_id'], userinfo['name']))
     print("  Flavor: %s [cpu:%-2s  ram:%-5s  root:%-3sGB  eph:%-3sGB]" % (flavorinfo['name'],
                                                                           flavorinfo['vcpus'],
