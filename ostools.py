@@ -187,7 +187,7 @@ class OSTools:
                     LEFT JOIN networks ON ports.network_id = networks.id \
                     WHERE ports.id='%s'" % (portid)
 
-        results = self._query(querystr, 'network_by_port_id', 'quantum', False)
+        results = self._query(querystr, 'netinfo_by_port_id', 'quantum', False)
         return results
 
     def dhcp_ports(self,networkid):
