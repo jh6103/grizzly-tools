@@ -166,7 +166,7 @@ class OSTools:
         results = self._query(querystr, 'vm_ports', 'quantum', True)
         return results
 
-    def network_by_port_id(self,portid):
+    def netinfo_by_port_id(self,portid):
         """ """
         querystr = "SELECT ports.name as pt_name, \
                     ports.network_id, \
@@ -174,22 +174,41 @@ class OSTools:
                     ipallocations.ip_address, \
                     ipallocations.subnet_id, \
                     ipallocations.expiration, \
+                    subnets.name as sn_name, \
                     subnets.cidr, \
+                    subnets.gateway_ip, \
                     floatingips.floating_ip_address, \
                     floatingips.router_id, \
-                    subnets.name as sn_name, \
-                    routers.id as router_id, \
-                    routers.name as rt_name, \
                     networks.name as nt_name \
                     FROM ports \
                     LEFT JOIN ipallocations ON ports.id = ipallocations.port_id \
                     LEFT JOIN floatingips ON ipallocations.port_id = floatingips.fixed_port_id \
                     LEFT JOIN subnets ON ipallocations.subnet_id = subnets.id \
-                    LEFT JOIN routers ON floatingips.router_id = routers.id \
                     LEFT JOIN networks ON ports.network_id = networks.id \
                     WHERE ports.id='%s'" % (portid)
 
         results = self._query(querystr, 'network_by_port_id', 'quantum', False)
+        return results
+
+    def dhcp_ports(self,networkid):
+        """ """
+        querystr = "SELECT id, mac_address, status \
+                    FROM ports \
+                    WHERE device_owner='network:dhcp' \
+                    AND network_id='%s'" % (networkid)
+
+        results = self._query(querystr, 'dhcp_ports', 'quantum', True)
+        return results
+
+    def router(self,networkid):
+        """ """
+        querystr = "SELECT ports.device_id,ports.mac_address,ports.status,routers.name \
+                    FROM ports \
+                    JOIN routers ON ports.device_id=routers.id \
+                    WHERE device_owner='network:router_interface' \
+                    AND ports.network_id='%s'" % (networkid)
+
+        results = self._query(querystr, 'router', 'quantum', False)
         return results
 
     def secgroups_by_port_id(self,port_id):
@@ -226,7 +245,7 @@ class OSTools:
         results = self._query(querystr, 'uuid_by_floating_ip', 'quantum', False)
         return results
 
-    def l3_gateway(self,router_id):
+    def l3_gw(self,router_id):
         """ """
         querystr = "SELECT agents.host \
                     FROM agents \

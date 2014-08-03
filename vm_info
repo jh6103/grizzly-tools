@@ -66,12 +66,11 @@ def main():
     print("Hostname: %s" % vminfo['hostname'])
     print(" Created: %s" % vminfo['created_at'])
     print(" Creator: %s [%s]" % (vminfo['user_id'], userinfo['name']))
-    print("  Flavor: %s [cpu:%-2s  ram:%-5s  root:%-3sGB  eph:%-3sGB]" %
-                (flavorinfo['name'],
-                flavorinfo['vcpus'],
-                flavorinfo['memory_mb'],
-                flavorinfo['root_gb'],
-                flavorinfo['ephemeral_gb']))
+    print("  Flavor: %s [cpu:%-2s  ram:%-5s  root:%-3sGB  eph:%-3sGB]" % (flavorinfo['name'],
+                                                                          flavorinfo['vcpus'],
+                                                                          flavorinfo['memory_mb'],
+                                                                          flavorinfo['root_gb'],
+                                                                          flavorinfo['ephemeral_gb']))
     print("   Image: %s [%s]" % (vminfo['image_ref'], imagename['name']))
     print(" SSH Key: %s" % vminfo['key_name'])
     print("    UUID: %s" % vminfo['uuid'])
@@ -89,18 +88,26 @@ def main():
             print
         else:
             for port in vmports:
-                netinfo = openstack.network_by_port_id(port['id'])
-                print(" VM Port: %s [%s]" % (port['id'], netinfo['pt_name']))
+                netinfo = openstack.netinfo_by_port_id(port['id'])
+                dhcp = openstack.dhcp_ports(netinfo['network_id'])
+                router = openstack.router(netinfo['network_id'])
+                if router:
+                    l3gw = openstack.l3_gw(router['device_id'])
+                print(" VM Port: %s [%s] [%s]" % (port['id'], netinfo['mac_address'], netinfo['pt_name']))
                 print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
                 print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
-                if netinfo['router_id']:
-                    l3gw = openstack.l3_gateway(netinfo['router_id'])
-                    print("  Router: %s [%s]" % (netinfo['router_id'], netinfo['rt_name']))
-                    print("   L3 GW: %s" % l3gw['host'])
-                    print("Floating: %s" % netinfo['floating_ip_address'])
-                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
                 print("    CIDR: %s" % netinfo['cidr'])
-                print("     MAC: %s" % netinfo['mac_address'])
+                print(" Gateway: %s" % netinfo['gateway_ip'])
+                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
+                if router:
+                    print("Floating: %s" % netinfo['floating_ip_address'])
+                    print("  Router: %s [%s] [%s] [%s]" % (router['device_id'],
+                                                           router['mac_address'],
+                                                           router['name'],
+                                                           router['status']))
+                    print("    L3GW: %s" % l3gw['host'])
+                for dhcpport in dhcp:
+                    print("    DHCP: %s [%s] [%s]" % (dhcpport['id'],dhcpport['mac_address'],dhcpport['status']))
                 print
 
     # Volumes Section
