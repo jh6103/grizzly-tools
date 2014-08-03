@@ -96,18 +96,19 @@ def main():
                 print(" VM Port: %s [%s] [%s]" % (port['id'], netinfo['mac_address'], netinfo['pt_name']))
                 print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
                 print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
-                print("    CIDR: %s" % netinfo['cidr'])
-                print(" Gateway: %s" % netinfo['gateway_ip'])
-                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
+                for dhcpport in dhcp:
+                    print("    DHCP: %s [%s] [%s]" % (dhcpport['id'],dhcpport['mac_address'],dhcpport['status']))
                 if router:
-                    print("Floating: %s" % netinfo['floating_ip_address'])
                     print("  Router: %s [%s] [%s] [%s]" % (router['device_id'],
                                                            router['mac_address'],
                                                            router['name'],
                                                            router['status']))
                     print("    L3GW: %s" % l3gw['host'])
-                for dhcpport in dhcp:
-                    print("    DHCP: %s [%s] [%s]" % (dhcpport['id'],dhcpport['mac_address'],dhcpport['status']))
+                print("    CIDR: %s" % netinfo['cidr'])
+                print(" Gateway: %s" % netinfo['gateway_ip'])
+                print(" Private: %s [exp:%s]" % (netinfo['ip_address'], netinfo['expiration']))
+                if router:
+                    print("Floating: %s" % netinfo['floating_ip_address'])
                 print
 
     # Volumes Section
