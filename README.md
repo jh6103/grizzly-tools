@@ -7,7 +7,8 @@ Admin scripts for Grizzly that direct-access the DB instead of API
 
 ```
 $ ./vm_info --help
-usage: vm_info [-h] [-n] [-v] [-s] [-f FLOATING_IP] [-i INSTANCE] [-u UUID]
+usage: vm_info [-h] [-n] [-v] [-s] [-a] [-f FLOATING_IP] [-i INSTANCE]
+               [-u UUID]
 
 Lookup VM Information
 
@@ -16,6 +17,7 @@ optional arguments:
   -n, --network         Include network information
   -v, --volumes         Include volume information
   -s, --secgroups       Include security group information
+  -a, --all             Include network, volume & security group information
   -f FLOATING_IP, --floating_ip FLOATING_IP
   -i INSTANCE, --instance INSTANCE
   -u UUID, --uuid UUID
