@@ -30,6 +30,7 @@ $ ./vm_info -nvsu d9000d06-d6cc-4783-8b77-839b62b9ab8e
 [ Virtual Machine ]
 Hostname: docker01
  Created: 2014-07-28 21:21:08
+ Updated: 2014-07-29 06:21:08
  Creator: 3dedc6ed0d4540e9b84d7f73c53a607c [jh6103]
   Flavor: m1.tiny [cpu:1   ram:512    root:12 GB  eph:0  GB]
    Image: 4c5d0874-933d-4eef-859e-697d44d51bd1 [Ubuntu-14.04]
@@ -46,7 +47,7 @@ Instance: instance-00002cf8
   Subnet: 78231522-11b6-4a06-b37f-c45061f6d723 [docker_subnet]
     DHCP: 31393d35-09a3-4cd8-84d4-04a7ea5ef630 [fa:16:3e:17:67:48] [ACTIVE]
     DHCP: 4fec4e6d-3dd3-44ae-ad5c-4957b65c0eaf [fa:16:3e:a7:ee:8f] [ACTIVE]
-  Router: c72a6b43-b946-4477-8cd6-a5eb5cc3c2bc [fa:16:3e:67:fe:0a] [docker_router]
+  Router: c72a6b43-b946-4477-8cd6-a5eb5cc3c2bc [fa:16:3e:67:fe:0a] [docker_router] [ACTIVE]
     L3GW: l3gw01.int.mydomain.com
     CIDR: 192.168.0.0/24
  Gateway: 192.168.0.1  
