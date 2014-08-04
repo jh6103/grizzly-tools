@@ -89,19 +89,19 @@ class OSTools:
     def vm_list(self, key, val=''):
         """ """
         if key == "all":
-            querystr = "SELECT id,host,project_id,uuid,vm_state,hostname \
+            querystr = "SELECT id,project_id,uuid,vm_state,hostname,host \
                         FROM instances \
                         WHERE deleted=0 ORDER BY host"
         elif key == "host":
-            querystr = "SELECT id,host,project_id,uuid,vm_state,hostname \
+            querystr = "SELECT id,project_id,uuid,vm_state,hostname,host \
                         FROM instances \
                         WHERE host='%s' AND deleted=0" % (val)
         elif key == "project_id":
-            querystr = "SELECT id,host,project_id,uuid,vm_state,hostname \
+            querystr = "SELECT id,project_id,uuid,vm_state,hostname,host \
                         FROM instances \
                         WHERE project_id='%s' AND deleted=0" % (val)
         elif key == "hostname":
-            querystr = "SELECT id,host,project_id,uuid,vm_state,hostname \
+            querystr = "SELECT id,project_id,uuid,vm_state,hostname,host \
                         FROM instances \
                         WHERE deleted=0 AND hostname like '%%%s%%'" % (val)
 
@@ -111,11 +111,35 @@ class OSTools:
     def vm_info(self, key, val):
         """ """
         if key == "instance_id":
-            querystr = "SELECT created_at,updated_at,id,user_id,project_id,image_ref,key_name,vm_state,hostname,host,instance_type_id,uuid \
+            querystr = "SELECT created_at, \
+                               updated_at, \
+                               id, \
+                               user_id, \
+                               project_id, \
+                               image_ref, \
+                               key_name, \
+                               vm_state, \
+                               hostname, \
+                               host, \
+                               display_name, \
+                               display_description, \
+                               instance_type_id,uuid \
                         FROM instances \
                         WHERE id='%s' AND deleted=0" % (val)
         elif key == "uuid":
-            querystr = "SELECT created_at,updated_at,id,user_id,project_id,image_ref,key_name,vm_state,hostname,host,instance_type_id,uuid \
+            querystr = "SELECT created_at, \
+                               updated_at, \
+                               id, \
+                               user_id, \
+                               project_id, \
+                               image_ref, \
+                               key_name, \
+                               vm_state, \
+                               hostname, \
+                               host, \
+                               display_name, \
+                               display_description, \
+                               instance_type_id,uuid \
                         FROM instances \
                         WHERE uuid='%s' AND deleted=0" % (val)
 
