@@ -156,6 +156,13 @@ class OSTools:
         results = self._query(querystr, 'project_by_id', 'keystone', False)
         return results
 
+    def projects(self):
+        """ """
+        querystr = "SELECT id,name,description,enabled FROM project ORDER BY name"
+
+        results = self._query(querystr, 'projects', 'keystone', True)
+        return results
+
 ##############################################################################
 # QUANTUM QUERIES
 ##############################################################################

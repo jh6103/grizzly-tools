@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+from ostools import *
+import argparse
+import sys
+
+openstack = OSTools('ostools.cfg')
+
+
+def get_args():
+    """Get command-line options"""
+    parser = argparse.ArgumentParser(prog = "tenant_list",
+                description = "List all tenants",
+                epilog = "")
+    parser.add_argument("-q", "--quiet",
+                        help = "Suppress header line",
+                        action="store_true")
+
+    args = parser.parse_args()
+    return args
+
+
+def longfield(mydict,field):
+    """Get longest item from a dictionary field in a list of dicts"""
+    x = []
+    [x.append(row[field]) for row in mydict]
+    return max(x, key=len)
+
+
+def main():
+    args = get_args()
+
+    projects = openstack.projects()
+    lng = len(longfield(projects,'name')) + 2
+
+    if not args.quiet:
+        print("%s%-*s %-33s %-8s %-32s%s" % (bld, lng, "TENANT NAME", "TENANT ID", "ENABLED", "DESCRIPTION", nrm))
+
+    for project in projects:
+        print("%-*s %-33s %-8s %-32s" % (lng, project['name'], project['id'], bool(project['enabled']), project['description']))
+
+if __name__ == '__main__':
+    main()
