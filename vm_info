@@ -21,6 +21,9 @@ def get_args():
     parser.add_argument("-s", "--secgroups",
                         help = "Include security group information",
                         action="store_true")
+    parser.add_argument("-a", "--all",
+                        help = "Include network, volume & security group information",
+                        action="store_true")
     parser.add_argument("-f", "--floating_ip")
     parser.add_argument("-i", "--instance")
     parser.add_argument("-u", "--uuid")
@@ -82,7 +85,7 @@ def main():
     print
 
     # Network Section
-    if args.network:
+    if args.network or args.all:
         print("%s[ Networking ]%s" % (red, nrm))
         if not vmports:
             print("No Network")
@@ -113,7 +116,7 @@ def main():
                 print
 
     # Volumes Section
-    if args.volumes:
+    if args.volumes or args.all:
         volinfo = openstack.volume_by_uuid(vminfo['uuid'])
         print("%s[ Volumes ]%s" % (red, nrm))
         if not volinfo:
@@ -132,7 +135,7 @@ def main():
                 print
 
     # Security Groups Section
-    if args.secgroups:
+    if args.secgroups or args.all:
         # Just use the first element of vmports since all are the same
         secgroups = openstack.secgroups_by_port_id(vmports[0]['id'])
         print("%s[ Security Groups ]%s" % (red, nrm))
