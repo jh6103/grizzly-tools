@@ -12,7 +12,7 @@ def get_args():
     """Get command-line options"""
     parser = argparse.ArgumentParser(prog = "email_list",
                 description = "Lookup email addresses",
-                epilog = "Select only ONE search parameter. [cnode|project]")
+                epilog = "Select only ONE search parameter. [cnode|project_id]")
     parser.add_argument("-c", "--cnode",
                         help="Short name of the compute node.")
     parser.add_argument("-p", "--project_id",
