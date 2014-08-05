@@ -32,7 +32,6 @@ $ ./vm_info -nvsu d9000d06-d6cc-4783-8b77-839b62b9ab8e
 [ Virtual Machine ]
 Hostname: docker01
  Display: docker01
-   Descr: docker01
  Created: 2014-07-28 21:21:08
  Updated: 2014-07-29 06:21:08
  Creator: 3dedc6ed0d4540e9b84d7f73c53a607c [jh6103]
