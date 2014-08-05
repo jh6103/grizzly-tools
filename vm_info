@@ -68,7 +68,7 @@ def main():
     print("%s[ Virtual Machine ]%s" % (red, nrm))
     print("Hostname: %s" % vminfo['hostname'])
     print(" Display: %s" % vminfo['display_name'])
-    print("   Descr: %s" % vminfo['display_description'])
+    #print("   Descr: %s" % vminfo['display_description'])
     print(" Created: %s" % vminfo['created_at'])
     print(" Updated: %s" % vminfo['updated_at'])
     print(" Creator: %s [%s]" % (vminfo['user_id'], userinfo['name']))
