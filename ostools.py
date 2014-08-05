@@ -187,6 +187,17 @@ class OSTools:
         results = self._query(querystr, 'projects', 'keystone', True)
         return results
 
+    def project_members(self,projectid):
+        """ """
+        querystr = "SELECT user.extra \
+                    FROM user \
+                    JOIN user_project_metadata \
+                    ON user.id=user_project_metadata.user_id \
+                    WHERE project_id='%s'" % (projectid)
+
+        results = self._query(querystr, 'project_members', 'keystone', True)
+        return results
+
 ##############################################################################
 # QUANTUM QUERIES
 ##############################################################################
