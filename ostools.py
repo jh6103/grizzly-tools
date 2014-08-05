@@ -173,14 +173,21 @@ class OSTools:
         results = self._query(querystr, 'user_by_id', 'keystone', False)
         return results
 
-    def project_by_id(self,projectid):
+    def project_info(self, key, val=''):
         """ """
-        querystr = "SELECT name,extra,description FROM project WHERE id='%s'" % (projectid)
+        if key == "name":
+            querystr = "SELECT id,name,description,enabled \
+                        FROM project \
+                        WHERE name='%s'" % (val)
+        elif key == "id":
+            querystr = "SELECT id,name,description,enabled \
+                        FROM project \
+                        WHERE id='%s'" % (val)
 
-        results = self._query(querystr, 'project_by_id', 'keystone', False)
+        results = self._query(querystr, 'project_info', 'keystone', False)
         return results
 
-    def projects(self):
+    def project_list(self):
         """ """
         querystr = "SELECT id,name,description,enabled FROM project ORDER BY name"
 

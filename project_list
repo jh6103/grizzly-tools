@@ -30,7 +30,7 @@ def longfield(mydict, field):
 def main():
     args = get_args()
 
-    projects = openstack.projects()
+    projects = openstack.project_list()
     lng = len(longfield(projects, 'name')) + 2
 
     if not args.quiet:

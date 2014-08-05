@@ -59,7 +59,7 @@ def main():
     # Get ancillary information
     vmports = openstack.vm_ports(vminfo['uuid'])
     userinfo = openstack.user_by_id(vminfo['user_id'])
-    projectinfo = openstack.project_by_id(vminfo['project_id'])
+    projectinfo = openstack.project_info("id", vminfo['project_id'])
     flavorinfo = openstack.flavor_by_id(vminfo['instance_type_id'])
     imagename = openstack.image_name(vminfo['image_ref'])
 
