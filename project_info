@@ -26,6 +26,10 @@ def get_args():
 
     args = parser.parse_args()
 
+    if args.project_id and args.name:
+        print("Please select ONE search parameter!")
+        parser.print_help()
+        sys.exit(1)
     if not args.project_id and not args.name:
         print("You must select a search parameter!")
         parser.print_help()
@@ -37,8 +41,52 @@ def get_args():
 def main():
     args = get_args()
 
-    print("I don't do anything yet!")
+    if args.project_id:
+        projectinfo = openstack.project_info('id', args.project_id)
+    elif args.name:
+        projectinfo = openstack.project_info('name', args.name)
 
+    if not projectinfo:
+        print("No projects found!")
+        sys.exit(1)
+    else:
+        print
+        print("Project: %s" % projectinfo['name'])
+        print("     ID: %s" % projectinfo['id'])
+        print("  Descr: %s" % projectinfo['description'])
+        print("Enabled: %s" % bool(projectinfo['enabled']))
+        print
+
+        if args.users:
+            userlist = openstack.project_members(projectinfo['id'])
+            print("%s%-33s %-20s %-32s %-32s%s" %
+                 (bld, "USER ID", "NAME", "EMAIL", "DEFAULT TENANT", nrm))
+
+            for user in userlist:
+                extra = json.loads(user['extra'])
+                print("%-33s %-20s %-32s %-32s" % (user['id'],
+                                                   user['name'][:20],
+                                                   extra['email'][:32],
+                                                   extra['tenantId']))
+            print
+
+        if args.floatingips:
+            floatinglist = openstack.floatingips(projectinfo['id'])
+            print("%s%-18s %-38s %-32s%s" % (bld, "IP ADDRESS", "VM UUID", "HOSTNAME", nrm))
+
+            for ip in floatinglist:
+                vm_uuid = openstack.uuid_by_floating_ip(ip['floating_ip_address'])
+
+                if vm_uuid:
+                    vminfo = openstack.vm_info('uuid', vm_uuid['uuid'])
+                    uuid = vm_uuid['uuid']
+                    name = vminfo['hostname']
+                else:
+                    uuid = "--"
+                    name = "--"
+                
+                print("%-18s %-38s %-32s" % (ip['floating_ip_address'], uuid, name))
+            print
 
 
 if __name__ == '__main__':

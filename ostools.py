@@ -155,8 +155,9 @@ class OSTools:
         return results
 
     def cnode_info(self,sort='ASC'):
-        querystr = "SELECT compute_nodes.vcpus,compute_nodes.memory_mb,compute_nodes.vcpus_used, \
-                    compute_nodes.memory_mb_used,compute_nodes.running_vms,services.host,services.disabled \
+        querystr = "SELECT compute_nodes.vcpus,compute_nodes.memory_mb, \
+                    compute_nodes.vcpus_used,compute_nodes.memory_mb_used, \
+                    compute_nodes.running_vms,services.host,services.disabled \
                     FROM compute_nodes \
                     JOIN services ON compute_nodes.service_id=services.id \
                     ORDER BY compute_nodes.running_vms %s" % (sort)
@@ -189,18 +190,21 @@ class OSTools:
 
     def project_list(self):
         """ """
-        querystr = "SELECT id,name,description,enabled FROM project ORDER BY name"
+        querystr = "SELECT id,name,description,enabled \
+                    FROM project \
+                    ORDER BY name"
 
         results = self._query(querystr, 'projects', 'keystone', True)
         return results
 
     def project_members(self,projectid):
         """ """
-        querystr = "SELECT user.extra \
+        querystr = "SELECT user.id,user.name,user.extra,user.enabled \
                     FROM user \
                     JOIN user_project_metadata \
                     ON user.id=user_project_metadata.user_id \
-                    WHERE project_id='%s'" % (projectid)
+                    WHERE project_id='%s' \
+                    ORDER BY user.name" % (projectid)
 
         results = self._query(querystr, 'project_members', 'keystone', True)
         return results
@@ -230,10 +234,10 @@ class OSTools:
                     floatingips.router_id, \
                     networks.name as nt_name \
                     FROM ports \
-                    LEFT JOIN ipallocations ON ports.id = ipallocations.port_id \
-                    LEFT JOIN floatingips ON ipallocations.port_id = floatingips.fixed_port_id \
-                    LEFT JOIN subnets ON ipallocations.subnet_id = subnets.id \
-                    LEFT JOIN networks ON ports.network_id = networks.id \
+                    LEFT JOIN ipallocations ON ports.id=ipallocations.port_id \
+                    LEFT JOIN floatingips ON ipallocations.port_id=floatingips.fixed_port_id \
+                    LEFT JOIN subnets ON ipallocations.subnet_id=subnets.id \
+                    LEFT JOIN networks ON ports.network_id=networks.id \
                     WHERE ports.id='%s'" % (portid)
 
         results = self._query(querystr, 'netinfo_by_port_id', 'quantum', False)
@@ -266,7 +270,8 @@ class OSTools:
                     securitygroups.name, \
                     securitygroups.description \
                     FROM securitygroupportbindings \
-                    JOIN securitygroups ON securitygroupportbindings.security_group_id = securitygroups.id \
+                    JOIN securitygroups \
+                    ON securitygroupportbindings.security_group_id=securitygroups.id \
                     WHERE securitygroupportbindings.port_id='%s'" % (port_id)
 
         results = self._query(querystr, 'secgroups_by_port_id', 'quantum', True)
@@ -288,7 +293,7 @@ class OSTools:
         """ """
         querystr = "SELECT ports.device_id as uuid\
                     FROM ports \
-                    JOIN floatingips ON ports.id = floatingips.fixed_port_id \
+                    JOIN floatingips ON ports.id=floatingips.fixed_port_id \
                     WHERE floatingips.floating_ip_address='%s'" % (ip)
 
         results = self._query(querystr, 'uuid_by_floating_ip', 'quantum', False)
@@ -298,10 +303,21 @@ class OSTools:
         """ """
         querystr = "SELECT agents.host \
                     FROM agents \
-                    JOIN routerl3agentbindings ON agents.id = routerl3agentbindings.l3_agent_id \
+                    JOIN routerl3agentbindings \
+                    ON agents.id=routerl3agentbindings.l3_agent_id \
                     WHERE routerl3agentbindings.router_id='%s'" % (router_id)
 
         results = self._query(querystr, 'l3_gw', 'quantum', False)
+        return results
+
+    def floatingips(self,projectid):
+        """ """
+        querystr = "SELECT * \
+                    FROM floatingips \
+                    WHERE tenant_id='%s' \
+                    ORDER BY floating_ip_address" % (projectid)
+
+        results = self._query(querystr, 'floatingips', 'quantum', True)
         return results
 
 ##############################################################################
@@ -309,7 +325,11 @@ class OSTools:
 ##############################################################################
     def volume_by_uuid(self,uuid):
         """ """
-        querystr = "SELECT * FROM volumes WHERE deleted=0 AND instance_uuid='%s' ORDER BY display_name" % (uuid)
+        querystr = "SELECT * \
+                    FROM volumes \
+                    WHERE deleted=0 \
+                    AND instance_uuid='%s' \
+                    ORDER BY display_name" % (uuid)
 
         results = self._query(querystr, 'volume_by_uuid', 'cinder', True)
         return results
