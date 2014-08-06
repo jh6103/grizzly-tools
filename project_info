@@ -10,9 +10,9 @@ openstack = OSTools('ostools.cfg')
 
 def get_args():
     """Get command-line options"""
-    parser = argparse.ArgumentParser(prog = "project_info",
-                description = "Lookup project specific information",
-                epilog = "")
+    parser = argparse.ArgumentParser(prog="project_info",
+                description="Lookup project specific information",
+                epilog="")
     parser.add_argument("-p", "--project_id",
                         help="The project/tenant ID.")
     parser.add_argument("-n", "--name",
@@ -72,7 +72,8 @@ def main():
 
         if args.floatingips:
             floatinglist = openstack.floatingips(projectinfo['id'])
-            print("%s%-18s %-38s %-32s%s" % (bld, "IP ADDRESS", "VM UUID", "HOSTNAME", nrm))
+            print("%s%-18s %-38s %-32s%s" %
+                 (bld, "IP ADDRESS", "VM UUID", "HOSTNAME", nrm))
 
             for ip in floatinglist:
                 vm_uuid = openstack.uuid_by_floating_ip(ip['floating_ip_address'])
@@ -84,8 +85,9 @@ def main():
                 else:
                     uuid = "--"
                     name = "--"
-                
-                print("%-18s %-38s %-32s" % (ip['floating_ip_address'], uuid, name))
+
+                print("%-18s %-38s %-32s" %
+                     (ip['floating_ip_address'], uuid, name))
             print
 
 
