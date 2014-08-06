@@ -23,6 +23,9 @@ def get_args():
     parser.add_argument("-f", "--floatingips",
                         help="List allocated floating IP's",
                         action="store_true")
+    parser.add_argument("-s", "--secgroups",
+                        help="List security groups & rules",
+                        action="store_true")
 
     args = parser.parse_args()
 
@@ -72,23 +75,50 @@ def main():
 
         if args.floatingips:
             floatinglist = openstack.floatingips(projectinfo['id'])
-            print("%s%-18s %-38s %-32s%s" %
-                 (bld, "IP ADDRESS", "VM UUID", "HOSTNAME", nrm))
+            if not floatinglist:
+                print("No Floating IP's")
+                print
+            else:
+                print("%s%-18s %-38s %-32s%s" %
+                     (bld, "IP ADDRESS", "VM UUID", "HOSTNAME", nrm))
 
-            for ip in floatinglist:
-                vm_uuid = openstack.uuid_by_floating_ip(ip['floating_ip_address'])
+                for ip in floatinglist:
+                    vm_uuid = openstack.uuid_by_floating_ip(ip['floating_ip_address'])
 
-                if vm_uuid:
-                    vminfo = openstack.vm_info('uuid', vm_uuid['uuid'])
-                    uuid = vm_uuid['uuid']
-                    name = vminfo['hostname']
-                else:
-                    uuid = "--"
-                    name = "--"
+                    if vm_uuid:
+                        vminfo = openstack.vm_info('uuid', vm_uuid['uuid'])
+                        uuid = vm_uuid['uuid']
+                        name = vminfo['hostname']
+                    else:
+                        uuid = "--"
+                        name = "--"
 
-                print("%-18s %-38s %-32s" %
-                     (ip['floating_ip_address'], uuid, name))
+                    print("%-18s %-38s %-32s" %
+                         (ip['floating_ip_address'], uuid, name))
             print
+
+        if args.secgroups:
+            secgroups = openstack.secgroups_by_project_id(projectinfo['id'])
+            if not secgroups:
+                print("No Security Groups")
+                print
+            else:
+                for group in secgroups:
+                    print("%s [%s]" % (group['id'], group['name']))
+                    print(":: %s" % group['description'])
+                    sg_rules = openstack.secgroup_rules(group['id'])
+                    if not sg_rules:
+                        print("No Security Group Rules")
+                    else:
+                        print("%s    %-6s %-7s %-7s %-20s %s%s" %
+                            (bld, "PROT", "MIN", "MAX", "CIDR", "ID", nrm))
+                        for rule in sg_rules:
+                            print("    %-6s %-7s %-7s %-20s %s" % (rule['protocol'],
+                                                                   rule['port_range_min'],
+                                                                   rule['port_range_max'],
+                                                                   rule['remote_ip_prefix'],
+                                                                   rule['id']))
+                    print
 
 
 if __name__ == '__main__':

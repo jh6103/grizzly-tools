@@ -277,6 +277,15 @@ class OSTools:
         results = self._query(querystr, 'secgroups_by_port_id', 'quantum', True)
         return results
 
+    def secgroups_by_project_id(self,projectid):
+        """ """
+        querystr = "SELECT id,name,description \
+                    FROM securitygroups \
+                    WHERE tenant_id='%s'" % (projectid)
+
+        results = self._query(querystr, 'secgroups_by_project_id', 'quantum', True)
+        return results
+
     def secgroup_rules(self,security_group_id):
         """ """
         querystr = "SELECT id,protocol,port_range_min,port_range_max,remote_ip_prefix \
