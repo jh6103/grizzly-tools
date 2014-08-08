@@ -45,6 +45,10 @@ def main():
     # Get VM Information
     if args.floating_ip:
         uuid = openstack.uuid_by_floating_ip(args.floating_ip)
+        # Match?
+        if not uuid:
+            print("Unable to find VM matching search criteria!")
+            sys.exit(1)
         vminfo = openstack.vm_info('uuid', uuid['uuid'])
     if args.instance:
         if "instance-" in args.instance or "i-" in args.instance:
@@ -55,6 +59,11 @@ def main():
         vminfo = openstack.vm_info('instance_id', instid)
     if args.uuid:
         vminfo = openstack.vm_info('uuid', args.uuid)
+
+    # Match?
+    if not vminfo:
+        print("Unable to find VM matching search criteria!")
+        sys.exit(1)
 
     # Get ancillary information
     vmports = openstack.vm_ports(vminfo['uuid'])
