@@ -132,13 +132,21 @@ def main():
         if args.quotas:
             print("%s[ Quotas ]%s" % (red, nrm))
             quota_info = openstack.project_quotas(projectinfo['id'])
-            print("%s%-28s %-8s %-8s %-8s%s" %
-                 (bld, "RESOURCE", "QUOTA", "USED", "RESERVED", nrm))
+            print("%s%-28s %-8s %-8s %-8s %-8s%s" %
+                 (bld, "RESOURCE", "QUOTA", "USED", "RSRVD", "ACTUAL", nrm))
             for quota in quota_info:
-                print("%-28s %-8s %-8s %-8s" % (quota['resource'],
-                                                quota['hard_limit'],
-                                                quota['in_use'],
-                                                quota['reserved']))
+                flag = ''
+                if quota['in_use'] != '--' and \
+                   quota['actual'] != '--' and \
+                   quota['in_use'] != quota['actual']:
+                    flag = red
+                print("%s%-28s %-8s %-8s %-8s %-8s%s" % (flag,
+                                                         quota['resource'],
+                                                         quota['hard_limit'],
+                                                         quota['in_use'],
+                                                         quota['reserved'],
+                                                         quota['actual'],
+                                                         nrm))
             print
 
         if args.vms:

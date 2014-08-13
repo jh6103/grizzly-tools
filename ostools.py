@@ -105,12 +105,27 @@ class OSTools:
         cndr_quotause = self._query(querystr, 'cndr_quota_usage', 'cinder', True)
         quotause = nova_quotause + cndr_quotause
 
+        querystr = "SELECT count(*) as instances, sum(vcpus) cores, sum(memory_mb) as ram \
+                    FROM instances WHERE deleted=0 AND project_id='%s'" % (projectid)
+        nova_actual = self._query(querystr, 'nova_actual', 'nova', False)
 
         # Build results
         results = []
         for q in quotas:
-            x = {'resource': '--', 'hard_limit': '--', 'in_use': '--', 'reserved': '--'}
+            x = {'resource': '--',
+                 'hard_limit': '--',
+                 'in_use': '--',
+                 'reserved': '--',
+                 'actual': '--'}
             x.update(q)
+
+            # Set nova actual values
+            if q['resource'] == 'instances':
+                x['actual'] = nova_actual['instances']
+            if q['resource'] == 'cores':
+                x['actual'] = nova_actual['cores']
+            if q['resource'] == 'ram':
+                x['actual'] = nova_actual['ram']
 
             # Manually obtain floatingip usage
             if q['resource'] == 'floating_ips':
@@ -118,7 +133,7 @@ class OSTools:
                             FROM floatingips \
                             WHERE tenant_id='%s'" % (projectid)
                 fips = self._query(querystr, 'fips', 'quantum', False)
-                x['in_use'] = fips['fips']
+                x['actual'] = fips['fips']
 
             # Manually obtain secgroup usage
             if q['resource'] == 'security_groups':
@@ -126,7 +141,7 @@ class OSTools:
                             FROM securitygroups \
                             WHERE tenant_id='%s'" % (projectid)
                 sgs = self._query(querystr, 'sgs', 'quantum', False)
-                x['in_use'] = sgs['sgs']
+                x['actual'] = sgs['sgs']
 
             for qu in quotause:
                 if qu['resource'] == q['resource']:
