@@ -151,7 +151,7 @@ def main():
 
         if args.vms:
             print("%s[ VM's ]%s" % (red, nrm))
-            vmlist = openstack.vm_list('project_id', args.project_id)
+            vmlist = openstack.vm_list('project_id', projectinfo['id'])
             print("%s%-6s %-10s  %-32s  %-36s  %-9s  %s%s" %
                  (bld, "CNODE", "INSTANCE", "PROJECT_ID", "UUID", "STATE", "HOSTNAME", nrm))
             for row in vmlist:
