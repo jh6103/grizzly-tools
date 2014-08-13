@@ -84,6 +84,58 @@ class OSTools:
         return (host,user,password,name)
 
 ##############################################################################
+# MIXED QUERIES
+##############################################################################
+    def project_quotas(self, projectid):
+        querystr = "SELECT resource,hard_limit \
+                    FROM quotas \
+                    WHERE deleted=0 \
+                    AND project_id='%s' \
+                    ORDER BY resource" % (projectid)
+        nova_quotas = self._query(querystr, 'nova_quotas', 'nova', True)
+        cndr_quotas = self._query(querystr, 'cndr_quotas', 'cinder', True)
+        quotas = nova_quotas + cndr_quotas
+
+        querystr = "SELECT resource,in_use,reserved \
+                    FROM quota_usages \
+                    WHERE deleted=0 \
+                    AND project_id='%s' \
+                    ORDER BY resource" % (projectid)
+        nova_quotause = self._query(querystr, 'nova_quota_usage', 'nova', True)
+        cndr_quotause = self._query(querystr, 'cndr_quota_usage', 'cinder', True)
+        quotause = nova_quotause + cndr_quotause
+
+
+        # Build results
+        results = []
+        for q in quotas:
+            x = {'resource': '--', 'hard_limit': '--', 'in_use': '--', 'reserved': '--'}
+            x.update(q)
+
+            # Manually obtain floatingip usage
+            if q['resource'] == 'floating_ips':
+                querystr = "SELECT count(*) AS fips \
+                            FROM floatingips \
+                            WHERE tenant_id='%s'" % (projectid)
+                fips = self._query(querystr, 'fips', 'quantum', False)
+                x['in_use'] = fips['fips']
+
+            # Manually obtain secgroup usage
+            if q['resource'] == 'security_groups':
+                querystr = "SELECT count(*) AS sgs \
+                            FROM securitygroups \
+                            WHERE tenant_id='%s'" % (projectid)
+                sgs = self._query(querystr, 'sgs', 'quantum', False)
+                x['in_use'] = sgs['sgs']
+
+            for qu in quotause:
+                if qu['resource'] == q['resource']:
+                    x.update(qu)
+            results.append(x)
+
+        return results
+
+##############################################################################
 # NOVA QUERIES
 ##############################################################################
     def vm_list(self, key, val=''):
@@ -341,6 +393,24 @@ class OSTools:
                     ORDER BY display_name" % (uuid)
 
         results = self._query(querystr, 'volume_by_uuid', 'cinder', True)
+        return results
+
+    def cinder_quotas(self,projectid):
+        """ """
+        querystr = "SELECT resource,hard_limit \
+                    FROM quotas \
+                    WHERE deleted=0 AND project_id='%s'" % (projectid)
+
+        results = self._query(querystr, 'cincer_quotas', 'cinder', True)
+        return results
+
+    def cinder_quota_usage(self,projectid):
+        """ """
+        querystr = "SELECT resource,in_use,reserved \
+                    FROM quota_usages \
+                    WHERE deleted=0 AND project_id='%s'" % (projectid)
+
+        results = self._query(querystr, 'cinder_quota_usage', 'cinder', True)
         return results
 
 ##############################################################################

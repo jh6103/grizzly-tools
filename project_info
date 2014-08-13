@@ -26,6 +26,12 @@ def get_args():
     parser.add_argument("-s", "--secgroups",
                         help="List security groups & rules",
                         action="store_true")
+    parser.add_argument("-q", "--quotas",
+                        help="List quotas",
+                        action="store_true")
+    parser.add_argument("-v", "--vms",
+                        help="List virtual machines",
+                        action="store_true")
 
     args = parser.parse_args()
 
@@ -61,6 +67,7 @@ def main():
         print
 
         if args.users:
+            print("%s[ Users ]%s" % (red, nrm))
             userlist = openstack.project_members(projectinfo['id'])
             print("%s%-33s %-20s %-32s %-32s%s" %
                  (bld, "USER ID", "NAME", "EMAIL", "DEFAULT TENANT", nrm))
@@ -74,6 +81,7 @@ def main():
             print
 
         if args.floatingips:
+            print("%s[ Floating IP's ]%s" % (red, nrm))
             floatinglist = openstack.floatingips(projectinfo['id'])
             if not floatinglist:
                 print("No Floating IP's")
@@ -98,6 +106,7 @@ def main():
             print
 
         if args.secgroups:
+            print("%s[ Security Groups ]%s" % (red, nrm))
             secgroups = openstack.secgroups_by_project_id(projectinfo['id'])
             if not secgroups:
                 print("No Security Groups")
@@ -120,6 +129,32 @@ def main():
                                                                    rule['id']))
                     print
 
+        if args.quotas:
+            print("%s[ Quotas ]%s" % (red, nrm))
+            quota_info = openstack.project_quotas(projectinfo['id'])
+            print("%s%-28s %-8s %-8s %-8s%s" %
+                 (bld, "RESOURCE", "QUOTA", "USED", "RESERVED", nrm))
+            for quota in quota_info:
+                print("%-28s %-8s %-8s %-8s" % (quota['resource'],
+                                                quota['hard_limit'],
+                                                quota['in_use'],
+                                                quota['reserved']))
+            print
+
+        if args.vms:
+            print("%s[ VM's ]%s" % (red, nrm))
+            vmlist = openstack.vm_list('project_id', args.project_id)
+            print("%s%-6s %-10s  %-32s  %-36s  %-9s  %s%s" %
+                 (bld, "CNODE", "INSTANCE", "PROJECT_ID", "UUID", "STATE", "HOSTNAME", nrm))
+            for row in vmlist:
+                print("%-6s i-%08x  %-32s  %-36s  %-9s  %s" %
+                      (row['host'],
+                       row['id'],
+                       row['project_id'],
+                       row['uuid'],
+                       row['vm_state'],
+                       row['hostname']))
+            print
 
 if __name__ == '__main__':
     main()
