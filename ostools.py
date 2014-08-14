@@ -158,7 +158,7 @@ class OSTools:
                     JOIN ipallocations ON ports.id = ipallocations.port_id \
                     WHERE ipallocations.ip_address='%s'" % (ip)
 
-        uuidlist = self._query(querystr, 'vm_list_by_fixed_ip_1', 'quantum', True)
+        uuidlist = self._query(querystr, 'vm_list_by_fixed_ip', 'quantum', True)
 
         for uuid in uuidlist:
             vminfo = self.vm_info('uuid', uuid['device_id'])
