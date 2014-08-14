@@ -105,7 +105,7 @@ class OSTools:
         cndr_quotause = self._query(querystr, 'cndr_quota_usage', 'cinder', True)
         quotause = nova_quotause + cndr_quotause
 
-        querystr = "SELECT count(*) as instances, sum(vcpus) cores, sum(memory_mb) as ram \
+        querystr = "SELECT count(*) AS instances, sum(vcpus) AS cores, sum(memory_mb) AS ram \
                     FROM instances WHERE deleted=0 AND project_id='%s'" % (projectid)
         nova_actual = self._query(querystr, 'nova_actual', 'nova', False)
 
