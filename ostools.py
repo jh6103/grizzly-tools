@@ -410,24 +410,6 @@ class OSTools:
         results = self._query(querystr, 'volume_by_uuid', 'cinder', True)
         return results
 
-    def cinder_quotas(self,projectid):
-        """ """
-        querystr = "SELECT resource,hard_limit \
-                    FROM quotas \
-                    WHERE deleted=0 AND project_id='%s'" % (projectid)
-
-        results = self._query(querystr, 'cincer_quotas', 'cinder', True)
-        return results
-
-    def cinder_quota_usage(self,projectid):
-        """ """
-        querystr = "SELECT resource,in_use,reserved \
-                    FROM quota_usages \
-                    WHERE deleted=0 AND project_id='%s'" % (projectid)
-
-        results = self._query(querystr, 'cinder_quota_usage', 'cinder', True)
-        return results
-
 ##############################################################################
 # GLANCE QUERIES
 ##############################################################################
