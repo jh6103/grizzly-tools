@@ -19,6 +19,8 @@ def get_args():
     parser.add_argument("-a", "--all",
                         help = "List all VM's",
                         action = "store_true")
+    parser.add_argument("-f", "--fixedip",
+                        help = "A fixed IP address")
     parser.add_argument("-n", "--name",
                         help = "The VM hostname OR partial match (4 character minimum)")
     parser.add_argument("-c", "--cnode",
@@ -29,7 +31,7 @@ def get_args():
     args = parser.parse_args()
 
     # This section needs some work for 'at least one',but 'only one'
-    if not (args.all or args.name or args.cnode or args.project_id):
+    if not (args.all or args.name or args.cnode or args.project_id or args.fixedip):
         parser.error("No arguments provided!")
         parser.print_help()
         sys.exit(1)
@@ -48,6 +50,8 @@ def main():
     # Go get the vm list
     if args.all:
         vmlist = openstack.vm_list('all')
+    if args.fixedip:
+        vmlist = openstack.vm_list_by_fixed_ip(args.fixedip)
     if args.name:
         vmlist = openstack.vm_list('hostname', args.name)
     if args.cnode:

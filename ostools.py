@@ -150,6 +150,23 @@ class OSTools:
 
         return results
 
+    def vm_list_by_fixed_ip(self,ip):
+        """ """
+        results = []
+        querystr = "SELECT ports.device_id \
+                    FROM ports \
+                    JOIN ipallocations ON ports.id = ipallocations.port_id \
+                    WHERE ipallocations.ip_address='%s'" % (ip)
+
+        uuidlist = self._query(querystr, 'vm_list_by_fixed_ip_1', 'quantum', True)
+
+        for uuid in uuidlist:
+            vminfo = self.vm_info('uuid', uuid['device_id'])
+            if vminfo:
+                results.append(vminfo)
+
+        return results
+
 ##############################################################################
 # NOVA QUERIES
 ##############################################################################
