@@ -7,7 +7,7 @@ import os
 
 # Terminal info
 colorize = True
-if os.environ['TERM'] == "xterm" and colorize:
+if (os.environ['TERM'] == "xterm" or os.environ['TERM'] == "xterm-color") and colorize:
     bld = "\033[1m"       # bold
     uln = "\033[4m"       # underline
     nrm = "\033[0m"       # reset
