@@ -328,10 +328,11 @@ class OSTools:
 
     def dhcp_ports(self,networkid):
         """ """
-        querystr = "SELECT id, mac_address, status \
-                    FROM ports \
-                    WHERE device_owner='network:dhcp' \
-                    AND network_id='%s'" % (networkid)
+        querystr = "SELECT p.id, p.mac_address, p.status, a.ip_address \
+                    FROM ports p \
+                    JOIN ipallocations a ON p.id = a.port_id \
+                    WHERE p.device_owner='network:dhcp' \
+                    AND p.network_id='%s'" % (networkid)
 
         results = self._query(querystr, 'dhcp_ports', 'quantum', True)
         return results

@@ -112,7 +112,10 @@ def main():
                 print(" Network: %s [%s]" % (netinfo['network_id'], netinfo['nt_name']))
                 print("  Subnet: %s [%s]" % (netinfo['subnet_id'], netinfo['sn_name']))
                 for dhcpport in dhcp:
-                    print("    DHCP: %s [%s] [%s]" % (dhcpport['id'],dhcpport['mac_address'],dhcpport['status']))
+                    print("    DHCP: %s [%s] [%s] [%s]" % (dhcpport['id'],
+                                                           dhcpport['mac_address'],
+                                                           dhcpport['ip_address'],
+                                                           dhcpport['status']))
                 if router:
                     print("  Router: %s [%s] [%s] [%s]" % (router['device_id'],
                                                            router['mac_address'],
