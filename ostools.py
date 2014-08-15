@@ -54,12 +54,11 @@ class OSTools:
 
         if multirec:
             results = self.cursor.fetchall()
-            self._dbclose()
-            return results
         else:
             results = self.cursor.fetchone()
-            self._dbclose()
-            return results
+
+        self._dbclose()
+        return results
 
     def _dbclose(self):
         """ """
