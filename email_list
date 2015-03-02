@@ -36,7 +36,8 @@ def emails(userlist):
     emails = []
     for user in userlist:
         extra = json.loads(user['extra'])
-        emails.append(extra['email'])
+        if extra['email']:
+            emails.append(extra['email'])
 
     return emails
 
